@@ -1,0 +1,73 @@
+1.
+from django.contrib.auth.models import User
+user1 = User.objects.create_user(username = 'Author', password = 'Pass1')
+user1.save()
+
+user2 = User.objects.create_user(username = 'Kommentator', password = 'Pass2')
+user2.save()
+2.
+from news.models import *
+autor1 = Author.objects.create(user = user1)
+author2 = Author.objects.create(user = user2)
+3.
+category1 = Category.objects.create(name = 'мир')
+category2 = Category.objects.create(name = 'погода')
+category3 = Category.objects.create(name = 'общество')
+category4 = Category.objects.create(name = 'политика')
+4.
+art1 = Post.objects.create(author = Author.objects.get(user__username = 'Author'), type = "ar", heading = "О вкусной и здоровой пище", content = "Тема эта очень важная и нужная. Об этом можно многое рассказать, но зачем.")
+art2 = Post.objects.create(author = Author.objects.get(user__username = 'Kommentator'), type = "ar", heading = "О пользе туризма", content = "Хорошо гулять на природе. Но всегда надо брать с собой все самое необходимое.")
+nw1 = Post.objects.create(author = Author.objects.get(user__username = 'Author'), type = "nw", heading = "Погода на завтра", content = "Завтра во всем мире будет хорошая погода. Все выбрасываем зонтики")
+5.
+pc1 = PostCategory.objects.create(post = art1, category = Category.objects.get(name = 'общество'))
+pc2 = PostCategory.objects.create(post = Post.objects.get(id = 2), category = Category.objects.get(name = 'общество'))
+pc3 = PostCategory.objects.create(post = Post.objects.get(id = 3), category = Category.objects.get(id = 2))
+pc4 = PostCategory.objects.create(post = Post.objects.get(id = 3), category = Category.objects.get(id = 3))
+6.
+com1 =Comment.objects.create(post = Post.objects.get(id = 1), user = User.objects.get(id = 2), content = 'Пресновато')
+com2 =Comment.objects.create(post = Post.objects.get(id = 2), user = User.objects.get(id = 1), content = 'Я тоже люблю походы')
+com3 =Comment.objects.create(post = Post.objects.get(id = 3), user = User.objects.get(id = 1), content = 'Надеюсь вам понравится')
+com4 =Comment.objects.create(post = Post.objects.get(id = 3), user = User.objects.get(id = 2), content = 'Конечно')
+7.
+Post.objects.get(id = 1).like()
+Post.objects.get(id = 1).like()
+Post.objects.get(id = 1).like()
+
+Post.objects.get(id =2).like()
+Post.objects.get(id = 2).like()
+Post.objects.get(id = 2).dislike()
+
+Post.objects.get(id =3).like()
+Post.objects.get(id =3).like()
+Post.objects.get(id = 3).dislike()
+Post.objects.get(id = 3).dislike()
+Post.objects.get(id = 3).dislike()
+
+Comment.objects.get(id = 1).dislike()
+Comment.objects.get(id = 1).dislike()
+
+Comment.objects.get(id = 2).like()
+Comment.objects.get(id = 2).like()
+Comment.objects.get(id = 2).like()
+
+Comment.objects.get(id = 3).dislike()
+
+Comment.objects.get(id = 4).like()
+Comment.objects.get(id = 4).like()
+Comment.objects.get(id = 4).like()
+Comment.objects.get(id = 4).like()
+
+8.
+Author.update_rating(User.objects.get(username = 'Author'))
+Author.update_rating(User.objects.get(username = 'Kommentator'))
+
+9.
+print(User.objects.all().order_by('-author__rating').values('username', 'author__rating').first())
+
+10.
+best_post = Post.objects.all().order_by('-rating').first().id
+print(Post.objects.filter(id = best_post).values('creation_date', 'author__user__username', 'rating', 'heading'))
+print(Post.objects.get(id = best_post).preview())
+
+11.
+print(Comment.objects.filter(post__id = best_post).values('creation_date', 'user__username', 'rating', 'content'))
