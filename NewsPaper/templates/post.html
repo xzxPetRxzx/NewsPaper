@@ -1,0 +1,30 @@
+<!--  наследуемся от шаблона default.html, который мы создавали для flatpages -->
+{% extends 'flatpages/default.html' %}
+
+{% load custom_filters %}
+
+<!-- Название у нас будет products -->
+{% block title %}
+Новость
+{% endblock title %}
+
+<!-- В контенте на странице мы выводим все товары -->
+{% block content %}
+<h1>Новость</h1>
+
+    <table>
+        <tr>
+            <td>Заголовок</td>
+            <td>Дата публикации</td>
+            <td>Текст</td>
+        </tr>
+
+        <tr>
+            <td>{{cur_post.heading|censor}}</td>
+            <td>{{cur_post.creation_date|date:'d M Y'}}</td>
+            <td>{{cur_post.content|censor}}</td>
+        </tr>
+
+    </table>
+
+{% endblock content %}
