@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="5e4769e5-06ca-406d-be6e-df2c45b3709e" name="https://github.com/xzxPetRxzx/NewsPaper" url="https://github.com/xzxPetRxzx/NewsPaper">
+        <fileTransfer accessType="LOCAL" port="0" />
+      </webServer>
+    </option>
+  </component>
+</project>

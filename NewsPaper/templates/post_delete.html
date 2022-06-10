@@ -1,0 +1,45 @@
+<!--  наследуемся от шаблона default.html, который мы создавали для flatpages -->
+{% extends 'flatpages/default.html' %}
+
+{% load custom_filters %}
+
+<!-- Название у нас будет products -->
+{% block title %}
+Список новостей
+{% endblock title %}
+
+<!-- В контенте на странице мы выводим все товары -->
+{% block content %}
+
+
+<h1>Вы действительно хотите удалить новость?</h1>
+ <table>
+    <thead>
+        <th>
+            Заголовок
+        </th>
+        <th>
+            Дата публикации
+        </th>
+        <th>
+            Текст
+        </th>
+
+    </thead>
+    <tr>
+        <td>
+            {{ post.heading|censor }}
+        </td>
+        <td>
+            {{ post.creation_date|date:'d M Y' }}
+        </td>
+        <td>
+            {{ post.content|censor}}
+        </td>
+    </tr>
+</table>
+
+<form method="POST">
+    {% csrf_token %}
+    <input type="submit" value="подтвердить"></form>
+{% endblock content %}
