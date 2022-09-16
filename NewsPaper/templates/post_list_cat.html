@@ -1,0 +1,78 @@
+<!--  наследуемся от шаблона default.html, который мы создавали для flatpages -->
+{% extends 'flatpages/default.html' %}
+
+{% load custom_filters %}
+
+<!-- Название у нас будет products -->
+{% block title %}
+Список новостей
+{% endblock title %}
+
+<!-- В контенте на странице мы выводим все товары -->
+{% block content %}
+
+
+<h1>Новости</h1>
+
+<button> <a href="userpage">Страница пользователя</a> </button>
+
+{% if posts %}
+    <table>
+           <tr>
+               <td>Заголовок</td>
+               <td>Дата публикации</td>
+               <td>Текст</td>
+               <td>Категория</td>
+               <td>Действия</td>
+           </tr>
+
+            {%for post in posts%}
+                <tr>
+                    <td>
+                        <a href="{{post.id}}">{{post.heading|censor}}</a>
+                    </td>
+                    <td>{{post.creation_date|date:'d M Y'}}</td>
+                    <td>{{post.content|truncatechars:20|censor}}</td>
+                    <td>
+                        {% for v in post.category.all %}
+                            <a href={%url 'cathegory' v.id %}"<u>{{v.name}}</u></a>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        <a href="{{post.id}}/edit"<u>Редактировать</u></a>
+                        <a href="{{post.id}}/delete"<u>Удалить</u></a>
+                    </td>
+                </tr>
+            {% endfor %}
+    </table>
+    {% else %}
+       <h2>Новостей нет!</h2>
+    {% endif %}
+
+    {% if is_paginated %}
+
+    <!-- Если доступна предыдущая страница, то даём ссылку на неё и самую первую страницу -->
+    {% if page_obj.has_previous %}
+        <a href="?page=1">First</a>
+        <a href="?page={{ page_obj.previous_page_number }}"><<<</a>
+    {% endif %}
+
+    <!-- Показываем только текущую страницу и ближайшие к ней, чтобы список не тянулся и не захламлял страницу -->
+    {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+            <a>{{ num }}</a>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <a href="?page={{ num }}">{{ num }}</a>
+        {% endif %}
+    {% endfor %}
+
+    <!-- Если есть следующая страница, то даём ссылку на неё и на самую последнюю страницу -->
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">>>></a>
+        <a href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+    {% endif %}
+
+{% endif %}
+
+
+{% endblock content %}
