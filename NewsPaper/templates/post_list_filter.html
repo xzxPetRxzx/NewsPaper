@@ -5,7 +5,7 @@
 
 <!-- Название у нас будет products -->
 {% block title %}
-Фильтрация новостей
+Фильтрация новостей+++++++++++++++++++
 {% endblock title %}
 
 <!-- В контенте на странице мы выводим все товары -->
@@ -23,16 +23,21 @@
                <td>Заголовок</td>
                <td>Дата публикации</td>
                <td>Текст</td>
+               <td>Категория</td>
            </tr>
 
             {% for post in filter.qs %}
-                <tr>
-                    <td>{{post.heading|censor}}</td>
-                    <td>{{post.creation_date|date:'d M Y'}}</td>
-                    <td>{{post.content|truncatechars:20|censor}}</td>
-
-                </tr>
+        <td>{{post.heading|censor}}</td>
+        <td>{{post.creation_date|date:'d M Y'}}</td>
+        <td>{{post.content|truncatechars:20|censor}}</td>
+        <td>
+            {% for v in post.category.all %}
+            {{v.name}}
             {% endfor %}
+        </td>
+
+
+        {% endfor %}
     </table>
     {% else %}
        <h2>Новостей нет!</h2>

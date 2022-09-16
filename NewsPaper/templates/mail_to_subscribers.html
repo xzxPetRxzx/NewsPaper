@@ -6,7 +6,12 @@
     <title>Document</title>
 </head>
 <body>
-    <h2>Заголовок статьи</h2>
-    <p> Здравствуй, {{user.username}}. Новая статья в твоём любимом разделе! </p>
+    <h2><a href= 'http://127.0.0.1:8000/news/{{post.id}}'> {{post.heading}}</a></h2>
+    <p> {{post.content|truncatechars:50}}</p>
+
+
+
+
+
 </body>
 </html>

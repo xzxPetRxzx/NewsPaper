@@ -1,3 +1,5 @@
+from typing import Tuple
+
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -22,6 +24,7 @@ class Author(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=255, unique=True)
+    subscribers = models.ManyToManyField(User)
 
 class Post(models.Model):
     article = 'ar'
@@ -71,5 +74,6 @@ class Comment(models.Model):
     def dislike(self):
         self.rating -= 1
         self.save()
+
 
 # Create your models here.
