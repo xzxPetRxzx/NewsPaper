@@ -70,17 +70,14 @@ class PostDetails(DetailView):
 
 # Create your views here.
 
-
-
 class PostCreate(PermissionRequiredMixin, CreateView):
     template_name = 'post_add.html'
     form_class = PostForm
     success_url = '/news/'
     permission_required = ('news.add_post')
     def form_valid(self, form):
-        new_post = form.save()
-        mail_to_subscribers.delay(new_post.pk)
-
+        npost = form.save()
+        mail_to_subscribers.delay(post_id = npost.pk)
 
 
 class PostUpdate(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):

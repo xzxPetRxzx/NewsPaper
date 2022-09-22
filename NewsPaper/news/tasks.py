@@ -31,7 +31,7 @@ def collect_categories_for_post(post_id):
 
 @shared_task
 def mail_to_subscribers(post_id):
-    new_post = Post.objects.get(id = post_id)
+    new_post = Post.objects.get(pk = post_id)
 
     html_content = render_to_string(
         'mail_to_subscribers.html',
@@ -52,8 +52,7 @@ def mail_to_subscribers(post_id):
 
 @shared_task
 def week_info_mail():
-    posts = Post.objects.filter(creation_date__gte = (date.today() - timedelta(days=7))).id
-    last_date = date.today() - timedelta(days=7)
+    posts = Post.objects.filter(creation_date__gte = (date.today() - timedelta(days=7)))
 
     html_content = render_to_string(
         'week_mail.html',
@@ -63,7 +62,7 @@ def week_info_mail():
     )
     for category in collect_categories():
         for email in collect_subscribers_email_for_category(category):
-            subject = f'Здравствуте . Обновление категории {Category.objects.get(pk = category).name}'
+            subject = f'Здравствуте . Обновление в категории {Category.objects.get(pk = category).name} за неделю'
             msg = EmailMultiAlternatives(
                 subject=subject,
                 to=[str(email)]
