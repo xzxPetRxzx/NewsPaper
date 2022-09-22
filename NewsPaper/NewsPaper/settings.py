@@ -142,6 +142,13 @@ STATICFILES_DIRS = [
     BASE_DIR / "static"
 ]
 
+CELERY_BROKER_URL = 'redis://default:zxXn9Qm9IH96aIQn7tGmfih3Uf3GXs4t@redis-16421.c258.us-east-1-4.ec2.cloud.redislabs.com:16421'
+CELERY_RESULT_BACKEND = 'redis://default:zxXn9Qm9IH96aIQn7tGmfih3Uf3GXs4t@redis-16421.c258.us-east-1-4.ec2.cloud.redislabs.com:1642'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+
+
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = True

@@ -38,7 +38,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="C:\Users\Gara\Documents\GitHub\D5.9\venv"
+VIRTUAL_ENV="C:\Users\Gara\Documents\GitHub\NewsPaper\venv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.views import View
 from django.core.paginator import Paginator
 from django.http import HttpResponse
+from .tasks import mail_to_subscribers
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.views.generic import ListView, DetailView, UpdateView, CreateView, DeleteView, TemplateView
@@ -14,35 +15,9 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.core.mail import send_mail
+
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-
-
-@receiver(post_save, sender=Post)
-def send_for_subscribers(sender, instance, **kwargs):
-    html_content = render_to_string(
-        'mail_to_subscribers.html',
-        {
-         'post': instance
-        }
-
-    )
-
-    subscribers = User.objects.filter(category__post = instance.id).values('email')
-    #не могу получить список подписчиков он почему то получается пустым
-    #хотя если уменьшить на 1 значение instanse.id все работает
-
-    subject = f'Здравствуте . Новая статья в вашем любимом разделе{subscribers}'
-    msg = EmailMultiAlternatives(
-        subject=subject,
-        to=['garamet1989@yandex.ru']
-    )
-    msg.attach_alternative(html_content, "text/html")
-    msg.send()
-
-
-
 
 class PostList(ListView):
     model = Post
@@ -102,7 +77,9 @@ class PostCreate(PermissionRequiredMixin, CreateView):
     form_class = PostForm
     success_url = '/news/'
     permission_required = ('news.add_post')
-
+    def form_valid(self, form):
+        new_post = form.save()
+        mail_to_subscribers.delay(new_post.pk)
 
 
 
