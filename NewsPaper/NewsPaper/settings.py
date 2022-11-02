@@ -148,7 +148,9 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 
-
+ADMINS = (
+    ('admin', 'garamet1989@yandex.ru'),
+)
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = True
@@ -166,3 +168,117 @@ EMAIL_HOST_PASSWORD = 'Zxcvbnm01'
 DEFAULT_FROM_EMAIL = 'garamet1989@yandex.ru'
 #EMAIL_USE_SSL = True
 EMAIL_USE_TLS = True
+
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': os.path.join(BASE_DIR, 'cache_files'),
+    }
+}
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'style' : '{',
+    'formatters': {
+        'simple': {
+            'format': '%(asctime)s%(levelname)s%(message)s'
+        },
+        'warning': {
+            'format': '%(pathname)s'
+        },
+        'error': {
+            'format': '%(exc_info)s'
+        },
+        'genseclog': {
+            'format': '%(asctime)s%(levelname)s%(module)s%(message)s'
+        },
+        'errlog': {
+            'format': '%(asctime)s%(levelname)s%(message)s%(pathname)s%(exc_info)s'
+        },
+        'mailf': {
+            'format': '%(asctime)s%(levelname)s%(message)s%(pathname)s'
+        },
+    },
+    'filters': {
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
+        },
+        'consoleW': {
+            'level': 'WARNING',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'warning'
+        },
+        'consoleE': {
+            'level': 'ERROR',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'error'
+        },
+        'mail_admins': {
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler',
+            'formatter': 'mailf'
+        },
+        'genlog': {
+            'level': 'INFO',
+            'filters': ['require_debug_true'],
+            'class': 'logging.FileHandler',
+            'filename': '/logs/general.log',
+            'formatter': 'genseclog'
+        },
+        'seclog': {
+            'class': 'logging.FileHandler',
+            'filename': '/logs/security.log',
+            'formatter': 'genseclog'
+        },
+        'errlog': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': '/logs/errors.log',
+            'formatter': 'errlog'
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console', 'consoleW', 'consoleE', 'genlog'],
+            'propagate': True,
+        },
+        'django.request': {
+            'handlers': ['errlog', 'mail_admins'],
+            'propagate': True,
+        },
+        'django.server': {
+            'handlers': ['errlog', 'mail_admins'],
+            'propagate': True,
+        },
+        'django.template': {
+            'handlers': ['errlog'],
+            'propagate': True,
+        },
+        'django.db_backends': {
+            'handlers': ['errlog'],
+            'propagate': True,
+        },
+        'django.security': {
+            'handlers': ['seclog'],
+            'propagate': True,
+        }
+    }
+}
+
